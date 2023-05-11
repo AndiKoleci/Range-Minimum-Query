@@ -1,0 +1,108 @@
+Koleci Alexandru - 323 CD
+
+Pentru rezolvarea problemei Range Minimum Query am ales algoritmii:
+    Sparse Table
+    Segment Tree
+    Square Root Decomposition
+
+Fisierele din arhiva:
+    segment_tree.c - algoritmul si testarea pentru Segment Tree
+    sparse_table.c - algoritmul si testarea pentru Sparse Table
+    sqrt_decomposition.c - algoritmul si testarea pentru SQRT decomposition
+    Makefile - reguli de rulare pentru fisiere
+    README - explicarea tuturor elementelor legate de analiza celor 3 algoritmi
+    generate_tests.py - programul facut de mine pentru generarea testelor
+    testpy.out - fisierul in care e generat un test
+    in - folder cu 23 de teste de input, generate de mine
+    out - folder cu 23 de fisiere in care e scris outputul pentru algoritmul rulat
+    test-times - folder cu durata testelor pentru cei 3 algoritmi
+
+Alegerea testelor:
+    La rularea unui algoritm, se executa cele 23 de teste pentru acel algoritm.
+    Testele 1-7 sunt teste simple sau teste pentru care N proportional cu M
+    Testele 8-14 sunt teste pentru care N>M sau N>>M
+    Testele 15-21 sunt teste pentru care M>N sau M>>N
+    Testul 22 - verifica daca cei 3 algoritmi pot da update corect
+    Testul 23 - verifica eficienta algoritmului de update
+                Sparse Table e slab la update, asa ca il fac doar de 10 de ori!!
+                Segment Tree si SQRT Decomposition fac update de 1000000 ori
+                La acest test Sparse Table nu va da acelasi rezultat ca ceilalti
+                pentru ca se fac mai putine update-uri!!
+
+Generarea testelor:
+    Testele au fost generate cu un program python facut de mine :)
+    Comanda: python3 generate_tests.py imi va genera un test in testpy.out
+    Eu schimb din programul python cat vreau sa fie M, N si reach(nr maxim din vector).
+    Unele query-uri se repeta din pacate, dar majoritatea query-urilor difera.
+    La fiecare test am luat ce era in testpy.out si am dat copy paste in testX.in...
+
+Testarea vitezei algoritmilor:
+    Am creat in folderul test_times 3 fisiere in care scriu durata fiecarui test.
+    Fiecare algoritm are propriul lui fisier cu durata testarii.
+    La fiecare rulare a unui algoritm, fisierul e modificat.
+    Numarul de pe linia X reprezinta durata testului X.
+    Fiecare algoritm e testat de 3-4 ori, ca sa vad cam cat ar fi media.
+
+Observatii teste:
+    Testele 1-5 si 8-16 au durata foarte mica de executare deoarece sunt simple sau N>>M =>
+    => N>>M nu afecteaza mult.
+
+    Sparse table este cel mai rapid algoritm, si singurele teste la care dureaza
+    mai mult sunt cele in care M devine foarte mare (M->1000000).
+    Pentru cazul in care se dau 100 de update-uri, este EXTREM de lent
+    deoarece trebuie refacut table-ul la fiecare update, asa ca il fac doar de 10 ori..
+
+    Segment tree este putin mai lent, insa tot este un algoritm rapid.
+    Ca si Sparse Table, are intarzieri pentru M mari.
+    Pentru cazul in care se da update, e putin mai lent decat in testul in 
+    care M max si N max.
+
+    SQRT Decomposition este cel mai lent pe cazul cel mai greu (N max, M max), avand
+    o durata chiar de 3-4 ori mai mare decat Segment Tree.
+    Acest algoritm are cel mai rapid update, uneori timpul de update e chiar
+    mai mic decat timpul pentru testul 7 (N max, M max).
+
+Complexitatea celor 3 algoritmi alesi:
+
+Sparse Table:
+    query: O(1) - odata ce table este facuta, se cauta pur si simplu valoarea elementului
+    de la un anumit index. Nu depinde de N.
+
+    update: O(NlogN) - trebuie refacut complet table, asadar durata este data de marimea
+    table-ului: N linii si logN coloane.
+
+    Cel mai bun in cazul in care nu se da update.
+
+Segment Tree:
+    query: O(logN) - odata ce tree-ul este facut, pentru a ajunge la minimul dorit, trebuie sa
+    trecem prin nodurile care contin minimurile din diferite subintervale. Este practic o suma
+    de logN-uri, de aceea complexitatea este logN.
+
+    update: O(logN) - trebuie urmarit un singur drum de la radacina pana la frunza dorita, ceea ce
+    dureaza logN.
+
+    Bun pentru orice caz.
+
+Sqrt Decomposition:
+    query: O(sqrt(N)) - vectorul se imparte in sqrt(N) subintervale, pentru care
+    se face minimul, asa ca trebuie traversate sqrt(N) elemente pentru fiecare bloc.
+
+    update: O(1) - se gaseste blocul in care se afla elementul de la indexul respectiv
+    si doar se calculeaza minimul pentru acel bloc. Nu depinde de N. Nici macar 10000000 de
+    update-uri nu au incetinit programul!
+
+    Cel mai bun in cazul in care se da update.
+
+Analiza in functie de M:
+
+    Sparse Table: O(M)
+    Segment Tree: O(MlogN)
+    SQRT Decomposition: O(Msqrt(N)) => cel mai lent pt N si M mari (Msqrt(N) > MlogN > M).
+
+    Se observa ca cea mai mare greutate o are factorul M, de aceea testele cu M mare
+    sunt cele care dureaza mai mult.
+
+Surse externe:
+    https://www.geeksforgeeks.org/segment-tree-set-1-range-minimum-query/?ref=lbp
+    https://iq.opengenus.org/range-minimum-query-square-root-decomposition/
+    https://www.youtube.com/watch?v=0jWeUdxrGm4&ab_channel=Errichto
